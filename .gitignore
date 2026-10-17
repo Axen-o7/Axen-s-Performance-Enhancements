@@ -1,0 +1,14 @@
+/*
+!/.gitignore
+!/Source/
+
+/Source/*
+!/Source/PerformancePlus/
+
+/Source/PerformancePlus/**
+!/Source/PerformancePlus/**/
+!/Source/PerformancePlus/**/*.cs
+!/Source/PerformancePlus/PerformancePlus.csproj
+
+**/bin/
+**/obj/
