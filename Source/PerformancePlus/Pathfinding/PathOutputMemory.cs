@@ -1,3 +1,4 @@
+// path-output memory reduction.
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;

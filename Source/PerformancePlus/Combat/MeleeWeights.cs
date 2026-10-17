@@ -1,3 +1,4 @@
+// invocation-local melee weight reuse.
 using System.Reflection.Emit;
 using HarmonyLib;
 using RimWorld;

@@ -1,3 +1,4 @@
+// local psychic entropy reuse.
 using System.Reflection.Emit;
 using HarmonyLib;
 using RimWorld;
