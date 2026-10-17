@@ -43,20 +43,25 @@ public sealed class PerformancePlusSettings : ModSettings
     internal void Draw(Rect area)
     {
         var listing = new Listing_Standard(); listing.Begin(area);
-        listing.Label("Preserves vanilla simulation"); listing.GapLine();
-        listing.Label("Designed to preserve vanilla results and update timing. Enabled by default.");
-        listing.CheckboxLabeled("Path output memory reduction", ref PathMemory, "Reduces reserved path memory while allowing longer paths to grow normally.");
-        listing.CheckboxLabeled("Sparse gas processing", ref SparseGas, "Reduces processing when gas occupies only a small part of a map.");
-        listing.CheckboxLabeled("World dispatch", ref WorldDispatch, "Reduces world-object dispatch work while preserving scheduled callbacks.");
-        listing.CheckboxLabeled("Reservation indexing", ref ReservationIndex, "Speeds up searches for existing reservations.");
-        listing.CheckboxLabeled("Melee weight reuse", ref MeleeWeights, "Reuses calculations within one melee selection refresh.");
-        listing.CheckboxLabeled("Psychic entropy reuse", ref EntropyLocal, "Reuses calculations within one psychic heat evaluation.");
-        listing.Gap(); listing.Label("Changes vanilla simulation"); listing.GapLine();
-        listing.Label("These options change update timing and can affect outcomes. Off by default.");
-        listing.CheckboxLabeled("Small delay between colonist updates (60 ticks)", ref ColonyCadence,
+        Header("Standard", "Original simulation behavior • On by default");
+        Row("Path output memory", ref PathMemory, "Reduces reserved path memory while allowing longer paths to grow normally.");
+        Row("Sparse gas processing", ref SparseGas, "Reduces processing when gas occupies only a small part of a map.");
+        Row("World dispatch", ref WorldDispatch, "Reduces world-object dispatch work while preserving scheduled callbacks.");
+        Row("Reservation indexing", ref ReservationIndex, "Speeds up searches for existing reservations.");
+        Row("Melee weight reuse", ref MeleeWeights, "Reuses calculations within one melee selection refresh.");
+        Row("Psychic entropy reuse", ref EntropyLocal, "Reuses calculations within one psychic heat evaluation.");
+        listing.Gap(24f);
+        Header("Experimental", "May affect outcomes • Off by default");
+        Row("Colonist update delay", ref ColonyCadence,
             "Sets a 60-tick minimum interval for spawned, undrafted player colonists outside mental states. Uses the game's elapsed-tick handling, but can delay health, AI and work decisions by up to one game second. Drafted, animal and non-player pawns retain native intervals.");
-        listing.Gap();
+        Text.Font = GameFont.Tiny;
+        listing.Label("Small delay between updates (60 ticks)");
+        listing.Gap(24f);
+        var originalColor = GUI.color;
+        GUI.color = Color.gray;
         listing.Label("NOTICE: This mod is a WIP made for the constantly updating 1.7, so any one of these optimizations could become obsolete at any point.");
+        GUI.color = originalColor;
+        Text.Font = GameFont.Small;
         if (RestartRequired)
         {
             listing.Gap();
@@ -66,5 +71,29 @@ public sealed class PerformancePlusSettings : ModSettings
             GUI.color = color;
         }
         listing.End();
+
+        void Header(string title, string description)
+        {
+            Text.Font = GameFont.Medium;
+            listing.Label(title);
+            Text.Font = GameFont.Tiny;
+            var color = GUI.color;
+            GUI.color = Color.gray;
+            listing.Label(description);
+            GUI.color = color;
+            Text.Font = GameFont.Small;
+            listing.GapLine(8f);
+        }
+
+        void Row(string label, ref bool enabled, string tooltip)
+        {
+            var rect = listing.GetRect(36f);
+            if (label is "Path output memory" or "World dispatch" or "Melee weight reuse" or "Colonist update delay")
+                Widgets.DrawBoxSolid(rect, new Color(1f, 1f, 1f, 0.025f));
+            rect.xMin += 8f;
+            rect.xMax -= 8f;
+            Widgets.CheckboxLabeled(rect, label, ref enabled);
+            TooltipHandler.TipRegion(rect, tooltip);
+        }
     }
 }
