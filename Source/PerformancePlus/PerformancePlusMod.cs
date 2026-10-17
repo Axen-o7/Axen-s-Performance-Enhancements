@@ -7,7 +7,7 @@ namespace PerformancePlus;
 public sealed class PerformancePlusMod : Mod
 {
     private readonly PerformancePlusSettings settings;
-    public override string SettingsCategory() => "Performance Plus";
+    public override string SettingsCategory() => "Axen's Performance Enhancements";
     public override void DoSettingsWindowContents(Rect inRect) => settings.Draw(inRect);
     public const string PackageId = "axeno7.performanceplus";
     public static readonly List<string> AppliedFeatures = [];
@@ -25,7 +25,7 @@ public sealed class PerformancePlusMod : Mod
         Apply("entropy-local", Psychic.EntropyReuse.Apply);
         Apply("colony-cadence", Experimental.ColonyCadence.Apply);
         InitializationComplete = true;
-        Log.Message($"[Performance Plus] Enabled: {string.Join(", ", AppliedFeatures)}");
+        Log.Message($"[Axen's Performance Enhancements] Enabled: {string.Join(", ", AppliedFeatures)}");
 
         void Apply(string name, Action<Harmony> patch)
         {
