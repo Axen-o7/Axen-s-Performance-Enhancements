@@ -3,6 +3,7 @@
   <name>Axen's Performance Enhancements</name>
   <author>axen-o7</author>
   <packageId>axeno7.performanceplus</packageId>
+  <modVersion>1.1.0</modVersion>
   <supportedVersions><li>1.7</li></supportedVersions>
   <modDependencies>
     <li><packageId>brrainz.harmony</packageId><displayName>Harmony</displayName><steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl></li>
