@@ -9,7 +9,6 @@ internal static class PathDag
     internal static void Apply(Harmony h) => h.Patch(AccessTools.Method(typeof(PathFinder), "ScheduleGridJobs"), prefix: new HarmonyMethod(typeof(PathDag), nameof(Before)));
     private static bool Before(PathFinder __instance, ref JobHandle __result)
     {
-        // Arbitrary customizers/lord grids can have request-dependent shared state.
         if (__instance.tmpCurrentWork.Any(static request => request.customizer != null || request.RequesterLord != null)) return true;
         JobHandle joined = default;
         foreach (var request in __instance.tmpCurrentWork)
@@ -21,7 +20,6 @@ internal static class PathDag
                 joined = JobHandle.CombineDependencies(joined, next);
             }
         }
-        // Only immutable-input grid jobs overlap; the original downstream barrier remains.
         __result = joined;
         return false;
     }

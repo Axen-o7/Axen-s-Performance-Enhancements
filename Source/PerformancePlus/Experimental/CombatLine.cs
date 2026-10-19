@@ -19,7 +19,6 @@ internal static class CombatLine
         }
         if (replaced != 1) throw new InvalidOperationException("Expected exactly one hit-report construction.");
     }
-    // Experimental: intentionally removes otherwise-unused stat-cache refreshes along with the report.
     private static ShotReport LineOnly(Thing caster, Verb verb, LocalTargetInfo target)
     {
         var report = default(ShotReport);

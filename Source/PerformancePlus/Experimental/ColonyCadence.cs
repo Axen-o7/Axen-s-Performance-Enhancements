@@ -1,4 +1,5 @@
 // colonist update cadence.
+// This code is deprecated for the foreseeable future unless I or someone else takes another crack at figuring this optimization out. The tradeoff is that it causes colonists to be 'standing' for a second, which got frustrating to deal with in playtesting.
 using HarmonyLib;
 using Verse;
 

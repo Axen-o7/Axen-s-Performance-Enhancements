@@ -25,7 +25,6 @@ internal static class CameraRegistry
         using (__instance._gate.EnterScope())
         {
             var state = Worlds.GetValue(__instance, static _ => new State());
-            // Preserve dictionary enumeration order, including reused dictionary slots.
             var cameras = state.Cameras ??= __instance._objects.Values.OfType<UnityWorld.UnityComponentState>().Where(c => c.Instance is Camera && !c.GameObject.IsAssetToken).ToArray();
             int count = 0;
             foreach (var camera in cameras) if (!camera.Destroyed && (includeInactive || __instance.IsComponentVisibleForFind(camera))) count++;

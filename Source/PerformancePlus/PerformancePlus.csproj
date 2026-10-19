@@ -32,7 +32,6 @@
     <Reference Include="Waylith.UnityCompat"><HintPath>$(EngineReferences)/Waylith.UnityCompat.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="0Harmony"><HintPath>$(HarmonyPath)</HintPath><Private>false</Private></Reference>
   </ItemGroup>
-  <!-- Compile-only copies expose engine internals; the installed game files are never rewritten. -->
   <UsingTask TaskName="ExposeEngineReferences" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
     <ParameterGroup>
       <GameDirectory ParameterType="System.String" Required="true" />
