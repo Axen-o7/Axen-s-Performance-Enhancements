@@ -9,5 +9,5 @@
     <li><packageId>brrainz.harmony</packageId><displayName>Harmony</displayName><steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl></li>
   </modDependencies>
   <loadAfter><li>brrainz.harmony</li><li>ludeon.rimworld</li></loadAfter>
-  <description>Performance improvements for the already-fast Waylith engine in RimWorld 1.7. Customize each optimization in mod settings. LATEST TESTED VERSION: 1.7.4980 rev60</description>
+  <description>Performance improvements for the already-fast Waylith engine in RimWorld 1.7. Customize each optimization in mod settings. LATEST TESTED VERSION: 1.7.4982 rev1280</description>
 </ModMetaData>
