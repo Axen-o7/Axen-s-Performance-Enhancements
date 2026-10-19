@@ -1,3 +1,4 @@
+// shared optimization settings and interface.
 using UnityEngine;
 using Verse;
 
@@ -11,7 +12,20 @@ public sealed class PerformancePlusSettings : ModSettings
     public bool ReservationIndex = true;
     public bool MeleeWeights = true;
     public bool EntropyLocal = true;
-    public bool ColonyCadence;
+    public bool CombatLine;
+    public bool GlowBuffers;
+    public bool CloudZero;
+    public bool CameraRegistry;
+    public bool KeywordKey;
+    public bool CoverPass;
+    public bool PathDag;
+    public bool VacuumBfs;
+    public bool RoomGroups;
+    public bool SlaughterCursors;
+    public bool LazyTooltip;
+
+    private Vector2 scrollPosition;
+    private float contentHeight;
 
     public override void ExposeData()
     {
@@ -21,13 +35,33 @@ public sealed class PerformancePlusSettings : ModSettings
         Scribe_Values.Look(ref ReservationIndex, "reservationIndex", true);
         Scribe_Values.Look(ref MeleeWeights, "meleeWeights", true);
         Scribe_Values.Look(ref EntropyLocal, "entropyLocal", true);
-        Scribe_Values.Look(ref ColonyCadence, "colonyCadence", false);
+        Scribe_Values.Look(ref CombatLine, "combatLine", false);
+        Scribe_Values.Look(ref GlowBuffers, "glowBuffers", false);
+        Scribe_Values.Look(ref CloudZero, "cloudZero", false);
+        Scribe_Values.Look(ref CameraRegistry, "cameraRegistry", false);
+        Scribe_Values.Look(ref KeywordKey, "keywordKey", false);
+        Scribe_Values.Look(ref CoverPass, "coverPass", false);
+        Scribe_Values.Look(ref PathDag, "pathDag", false);
+        Scribe_Values.Look(ref VacuumBfs, "vacuumBfs", false);
+        Scribe_Values.Look(ref RoomGroups, "roomGroups", false);
+        Scribe_Values.Look(ref SlaughterCursors, "slaughterCursors", false);
+        Scribe_Values.Look(ref LazyTooltip, "lazyTooltip", false);
     }
 
     internal bool Enabled(string feature) => feature switch {
         "path-memory" => PathMemory, "sparse-gas" => SparseGas, "world-dispatch" => WorldDispatch,
         "reservation-index" => ReservationIndex, "melee-weights" => MeleeWeights, "entropy-local" => EntropyLocal,
-        "colony-cadence" => ColonyCadence,
+        "combat-line" => CombatLine,
+        "glow-buffers" => GlowBuffers,
+        "cloud-zero" => CloudZero,
+        "camera-registry" => CameraRegistry,
+        "keyword-key" => KeywordKey,
+        "cover-pass" => CoverPass,
+        "path-dag" => PathDag,
+        "vacuum-bfs" => VacuumBfs,
+        "room-groups" => RoomGroups,
+        "slaughter-cursors" => SlaughterCursors,
+        "lazy-tooltip" => LazyTooltip,
         _ => throw new ArgumentException("Unknown optimization: " + feature)
     };
 
@@ -38,25 +72,57 @@ public sealed class PerformancePlusSettings : ModSettings
         ReservationIndex != PerformancePlusMod.AppliedFeatures.Contains("reservation-index") ||
         MeleeWeights != PerformancePlusMod.AppliedFeatures.Contains("melee-weights") ||
         EntropyLocal != PerformancePlusMod.AppliedFeatures.Contains("entropy-local") ||
-        ColonyCadence != PerformancePlusMod.AppliedFeatures.Contains("colony-cadence");
+        CombatLine != PerformancePlusMod.AppliedFeatures.Contains("combat-line") ||
+        GlowBuffers != PerformancePlusMod.AppliedFeatures.Contains("glow-buffers") ||
+        CloudZero != PerformancePlusMod.AppliedFeatures.Contains("cloud-zero") ||
+        CameraRegistry != PerformancePlusMod.AppliedFeatures.Contains("camera-registry") ||
+        KeywordKey != PerformancePlusMod.AppliedFeatures.Contains("keyword-key") ||
+        CoverPass != PerformancePlusMod.AppliedFeatures.Contains("cover-pass") ||
+        PathDag != PerformancePlusMod.AppliedFeatures.Contains("path-dag") ||
+        VacuumBfs != PerformancePlusMod.AppliedFeatures.Contains("vacuum-bfs") ||
+        RoomGroups != PerformancePlusMod.AppliedFeatures.Contains("room-groups") ||
+        SlaughterCursors != PerformancePlusMod.AppliedFeatures.Contains("slaughter-cursors") ||
+        LazyTooltip != PerformancePlusMod.AppliedFeatures.Contains("lazy-tooltip");
 
     internal void Draw(Rect area)
     {
-        var listing = new Listing_Standard(); listing.Begin(area);
-        Header("Standard", "Original simulation behavior • On by default");
+        var view = new Rect(0f, 0f, area.width - 20f, Mathf.Max(contentHeight, area.height));
+        Widgets.BeginScrollView(area, ref scrollPosition, view);
+        var listing = new Listing_Standard(); listing.Begin(new Rect(0f, 0f, view.width, 10000f));
+        var rowIndex = 0;
+        Header("Standard", "On by default");
         Row("Path output memory", ref PathMemory, "Reduces reserved path memory while allowing longer paths to grow normally.");
         Row("Sparse gas processing", ref SparseGas, "Reduces processing when gas occupies only a small part of a map.");
         Row("World dispatch", ref WorldDispatch, "Reduces world-object dispatch work while preserving scheduled callbacks.");
         Row("Reservation indexing", ref ReservationIndex, "Speeds up searches for existing reservations.");
         Row("Melee weight reuse", ref MeleeWeights, "Reuses calculations within one melee selection refresh.");
-        Row("Psychic entropy reuse", ref EntropyLocal, "Reuses calculations within one psychic heat evaluation.");
+        Row("Psychic entropy reuse", ref EntropyLocal, "[Royalty] Reuses calculations within one psychic heat evaluation.");
         listing.Gap(24f);
-        Header("Experimental", "May affect outcomes • Off by default");
-        Row("Colonist update delay", ref ColonyCadence,
-            "Sets a 60-tick minimum interval for spawned, undrafted player colonists outside mental states. Uses the game's elapsed-tick handling, but can delay health, AI and work decisions by up to one game second. Drafted, animal and non-player pawns retain native intervals.");
+        Header("Experimental", "Off by default");
+        Row("Combat line calculation", ref CombatLine,
+            "Uses only the shooting line during friendly-fire scoring, avoiding a full shot report and its stat-cache refreshes.");
+        Row("Lighting buffer reuse", ref GlowBuffers,
+            "Sizes native lighting buffers to each light and reuses available pool slots.");
+        Row("Invisible cloud rendering", ref CloudZero,
+            "Skips cloud rendering only at exactly zero current and target opacity; keeps cloud fades.");
+        Row("Camera lookup indexing", ref CameraRegistry,
+            "Keeps a per-world camera index, invalidated when cameras are registered or destroyed. Other object searches use the original engine.");
+        Row("Shader keyword reuse", ref KeywordKey,
+            "Reuses combined material and global shader keyword keys until either changes.");
+        Row("Cover calculation reuse", ref CoverPass,
+            "Collects cover and calculates its blocking chance in one pass when creating a shot report.");
+        Row("Parallel path grids", ref PathDag,
+            "Allows independent path-grid jobs to overlap. Requests with customizers or lord grids use the original scheduling.");
+        Row("Vacuum room traversal", ref VacuumBfs,
+            "[Odyssey] Avoids repeated frontier searches while finding rooms exposed to vacuum.");
+        Row("Room grouping", ref RoomGroups,
+            "Groups new regions and districts once during room rebuilding instead of repeatedly scanning them.");
+        Row("Slaughter selection cursors", ref SlaughterCursors,
+            "Selects animals without repeatedly removing entries from the front of temporary lists. Keeps existing limits and selection order.");
+        Row("Lazy mechanitor tooltip", ref LazyTooltip,
+            "[Biotech] Builds the mechanitor bandwidth tooltip when it is requested instead of every draw.");
+        listing.Gap(24f);
         Text.Font = GameFont.Tiny;
-        listing.Label("Small delay between updates (60 ticks)");
-        listing.Gap(24f);
         var originalColor = GUI.color;
         GUI.color = Color.gray;
         listing.Label("NOTICE: This mod is a WIP made for the constantly updating 1.7, so any one of these optimizations could become obsolete at any point.");
@@ -70,7 +136,9 @@ public sealed class PerformancePlusSettings : ModSettings
             listing.Label("game must restart for changes to take effect");
             GUI.color = color;
         }
+        contentHeight = listing.CurHeight + 8f;
         listing.End();
+        Widgets.EndScrollView();
 
         void Header(string title, string description)
         {
@@ -88,7 +156,7 @@ public sealed class PerformancePlusSettings : ModSettings
         void Row(string label, ref bool enabled, string tooltip)
         {
             var rect = listing.GetRect(36f);
-            if (label is "Path output memory" or "World dispatch" or "Melee weight reuse" or "Colonist update delay")
+            if ((rowIndex++ & 1) == 0)
                 Widgets.DrawBoxSolid(rect, new Color(1f, 1f, 1f, 0.025f));
             rect.xMin += 8f;
             rect.xMax -= 8f;

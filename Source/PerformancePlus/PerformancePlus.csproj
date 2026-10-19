@@ -11,6 +11,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GameDir Condition="'$(GameDir)' == ''">/Users/lukeporter/Library/Application Support/Steam/steamapps/common/RimWorld/RimWorld.app/Contents/MacOS</GameDir>
     <HarmonyPath Condition="'$(HarmonyPath)' == ''">/Users/lukeporter/Library/Application Support/Steam/steamapps/workshop/content/294100/2009463077/1.7/Assemblies/0Harmony.dll</HarmonyPath>
+    <EngineReferences>$(MSBuildProjectDirectory)/obj/engine-references</EngineReferences>
+    <CecilPath Condition="'$(CecilPath)' == ''">$(NuGetPackageRoot)microsoft.codecoverage/17.14.1/build/netstandard2.0/Mono.Cecil.dll</CecilPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <Optimize>true</Optimize>
@@ -22,9 +24,49 @@
     <Error Text="Build Axen's Performance Enhancements with -c Release; the output folder is the installed mod." />
   </Target>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp"><HintPath>$(GameDir)/Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
-    <Reference Include="UnityStubs"><HintPath>$(GameDir)/UnityStubs.dll</HintPath><Private>false</Private></Reference>
-    <Reference Include="Waylith"><HintPath>$(GameDir)/Waylith.dll</HintPath><Private>false</Private></Reference>
+    <EngineReferenceSource Include="$(GameDir)/Assembly-CSharp.dll;$(GameDir)/UnityStubs.dll;$(GameDir)/Waylith.dll;$(GameDir)/RimWorld.dll;$(GameDir)/Waylith.UnityCompat.dll" />
+    <Reference Include="Assembly-CSharp"><HintPath>$(EngineReferences)/Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityStubs"><HintPath>$(EngineReferences)/UnityStubs.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Waylith"><HintPath>$(EngineReferences)/Waylith.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="RimWorld"><HintPath>$(EngineReferences)/RimWorld.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Waylith.UnityCompat"><HintPath>$(EngineReferences)/Waylith.UnityCompat.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="0Harmony"><HintPath>$(HarmonyPath)</HintPath><Private>false</Private></Reference>
   </ItemGroup>
+  <!-- Compile-only copies expose engine internals; the installed game files are never rewritten. -->
+  <UsingTask TaskName="ExposeEngineReferences" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <GameDirectory ParameterType="System.String" Required="true" />
+      <ReferenceDirectory ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Reference Include="$(CecilPath)" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="Mono.Cecil" />
+      <Code Type="Fragment" Language="cs"><![CDATA[
+        Directory.CreateDirectory(ReferenceDirectory);
+        using var resolver = new DefaultAssemblyResolver();
+        resolver.AddSearchDirectory(GameDirectory);
+        resolver.AddSearchDirectory(Path.GetDirectoryName(typeof(object).Assembly.Location));
+        void Expose(TypeDefinition type)
+        {
+            if (type.IsNested) type.IsNestedPublic = true; else type.IsPublic = true;
+            foreach (var field in type.Fields) field.IsPublic = true;
+            foreach (var method in type.Methods) method.IsPublic = true;
+            foreach (var child in type.NestedTypes) Expose(child);
+        }
+        foreach (var name in new[] { "Assembly-CSharp", "UnityStubs", "Waylith", "RimWorld", "Waylith.UnityCompat" })
+        {
+            using var assembly = AssemblyDefinition.ReadAssembly(Path.Combine(GameDirectory, name + ".dll"), new ReaderParameters { AssemblyResolver = resolver });
+            foreach (var type in assembly.MainModule.Types) Expose(type);
+            assembly.Write(Path.Combine(ReferenceDirectory, name + ".dll"));
+        }
+      ]]></Code>
+    </Task>
+  </UsingTask>
+  <Target Name="PrepareEngineReferences" BeforeTargets="ResolveAssemblyReferences"
+          Inputs="@(EngineReferenceSource);$(MSBuildProjectFullPath);$(CecilPath)"
+          Outputs="@(EngineReferenceSource->'$(EngineReferences)/%(Filename)%(Extension)')">
+    <Error Condition="!Exists('$(CecilPath)')" Text="Set CecilPath to an existing Mono.Cecil.dll for compile-only engine reference preparation." />
+    <ExposeEngineReferences GameDirectory="$(GameDir)" ReferenceDirectory="$(EngineReferences)" />
+  </Target>
 </Project>
