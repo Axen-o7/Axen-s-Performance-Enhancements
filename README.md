@@ -2,4 +2,4 @@ This is the source code for Axen's Performance Enhancements (APE). Credit to u/A
 
 Also I just wanted to clear up that when I say AI did not create this mod, that does not mean I'm anti-AI or refuse to use it during development. I've been experimenting with AI in programming ever since it came out in 2023 and it wasn't until about a year ago where I've started to take its output seriously. Of course I still enjoy writing my own code but AI is a really helpful tool for debugging and running tests, which is my main use case for it. If anyone's reading this with rage then I'm sorry but I will not stop using AI (I guess it's called SI now like what) and you don't have to use anything I develop if that's the case. I guess the clear answer to "do I use AI" is I do not blindly generate code with AI, but I don't exclude it from my development process. I won't use AI for designing art assets, however.
 
-Check out my other mods on Steam Workshop: [text](https://steamcommunity.com/profiles/76561199797667982/myworkshopfiles/?appid=294100)
+Check out my other mods on [Steam Workshop.](https://steamcommunity.com/profiles/76561199797667982/myworkshopfiles/?appid=294100)
