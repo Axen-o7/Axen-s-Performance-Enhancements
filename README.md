@@ -4,7 +4,7 @@ When I say AI did not create this mod, that does not mean I'm anti-AI or refuse 
 
 The options in the experimental section of mod settings are features I'm actively working on and testing, so they are not feature-complete and don't guarantee performance improvements.
 
-##Recent news - October 19 @9:48PM
+## Recent news - October 19 @9:48PM
 
 Benchmarking implies one or more of the experimental optimizations I created are actually regressing rather than improving TPS, at least in the early-game. I'll do mid and late-game colony benchmarking tomorrow morning after I go surfing.
 
@@ -14,12 +14,12 @@ This benchmark was with an early-game colony of just 1 colonist.
 
 Base TPS group is Core + DLCs.
 
-###Latest benchmarking results with Standard optimizations:
+### Latest benchmarking results with Standard optimizations:
 
 - (30,000 ticks passed) | Base TPS = 5,945 | Standard On = 6,797 | +14.3% TPS
 - (12,000 ticks passed) | Base TPS = 3,824 | Standard On = 4,525 | +18.3% TPS
 
-###Latest benchmarking results with Experimental + Standard optimizations:
+### Latest benchmarking results with Experimental + Standard optimizations:
 
 - (30,000 ticks passed) | Base TPS = 6,026 | E+S = 6,545 | +8.6% TPS
 - (12,000 ticks passed) | Base TPS = 4,481 | E+S = 4,788 | +6.8% TPS
