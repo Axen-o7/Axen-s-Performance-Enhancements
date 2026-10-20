@@ -2,7 +2,7 @@
 using HarmonyLib;
 using Unity.Jobs;
 using Verse;
-namespace PerformancePlus.Experimental;
+namespace AxensPerformanceEnhancements.Experimental;
 
 internal static class PathDag
 {

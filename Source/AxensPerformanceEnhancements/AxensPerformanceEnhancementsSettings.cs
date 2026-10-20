@@ -2,9 +2,9 @@
 using UnityEngine;
 using Verse;
 
-namespace PerformancePlus;
+namespace AxensPerformanceEnhancements;
 
-public sealed class PerformancePlusSettings : ModSettings
+public sealed class AxensPerformanceEnhancementsSettings : ModSettings
 {
     public bool PathMemory = true;
     public bool SparseGas = true;
@@ -66,23 +66,23 @@ public sealed class PerformancePlusSettings : ModSettings
     };
 
     internal bool RestartRequired =>
-        PathMemory != PerformancePlusMod.AppliedFeatures.Contains("path-memory") ||
-        SparseGas != PerformancePlusMod.AppliedFeatures.Contains("sparse-gas") ||
-        WorldDispatch != PerformancePlusMod.AppliedFeatures.Contains("world-dispatch") ||
-        ReservationIndex != PerformancePlusMod.AppliedFeatures.Contains("reservation-index") ||
-        MeleeWeights != PerformancePlusMod.AppliedFeatures.Contains("melee-weights") ||
-        EntropyLocal != PerformancePlusMod.AppliedFeatures.Contains("entropy-local") ||
-        CombatLine != PerformancePlusMod.AppliedFeatures.Contains("combat-line") ||
-        GlowBuffers != PerformancePlusMod.AppliedFeatures.Contains("glow-buffers") ||
-        CloudZero != PerformancePlusMod.AppliedFeatures.Contains("cloud-zero") ||
-        CameraRegistry != PerformancePlusMod.AppliedFeatures.Contains("camera-registry") ||
-        KeywordKey != PerformancePlusMod.AppliedFeatures.Contains("keyword-key") ||
-        CoverPass != PerformancePlusMod.AppliedFeatures.Contains("cover-pass") ||
-        PathDag != PerformancePlusMod.AppliedFeatures.Contains("path-dag") ||
-        VacuumBfs != PerformancePlusMod.AppliedFeatures.Contains("vacuum-bfs") ||
-        RoomGroups != PerformancePlusMod.AppliedFeatures.Contains("room-groups") ||
-        SlaughterCursors != PerformancePlusMod.AppliedFeatures.Contains("slaughter-cursors") ||
-        LazyTooltip != PerformancePlusMod.AppliedFeatures.Contains("lazy-tooltip");
+        PathMemory != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("path-memory") ||
+        SparseGas != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("sparse-gas") ||
+        WorldDispatch != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("world-dispatch") ||
+        ReservationIndex != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("reservation-index") ||
+        MeleeWeights != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("melee-weights") ||
+        EntropyLocal != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("entropy-local") ||
+        CombatLine != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("combat-line") ||
+        GlowBuffers != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("glow-buffers") ||
+        CloudZero != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("cloud-zero") ||
+        CameraRegistry != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("camera-registry") ||
+        KeywordKey != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("keyword-key") ||
+        CoverPass != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("cover-pass") ||
+        PathDag != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("path-dag") ||
+        VacuumBfs != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("vacuum-bfs") ||
+        RoomGroups != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("room-groups") ||
+        SlaughterCursors != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("slaughter-cursors") ||
+        LazyTooltip != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("lazy-tooltip");
 
     internal void Draw(Rect area)
     {

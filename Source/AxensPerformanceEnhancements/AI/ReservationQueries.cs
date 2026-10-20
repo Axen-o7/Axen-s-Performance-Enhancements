@@ -6,7 +6,7 @@ using HarmonyLib;
 using Verse;
 using Verse.AI;
 
-namespace PerformancePlus.AI;
+namespace AxensPerformanceEnhancements.AI;
 
 internal static class ReservationQueries
 {

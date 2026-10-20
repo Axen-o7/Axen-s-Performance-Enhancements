@@ -3,11 +3,11 @@ using HarmonyLib;
 using UnityEngine;
 using Verse;
 
-namespace PerformancePlus;
+namespace AxensPerformanceEnhancements;
 
-public sealed class PerformancePlusMod : Mod
+public sealed class AxensPerformanceEnhancementsMod : Mod
 {
-    private readonly PerformancePlusSettings settings;
+    private readonly AxensPerformanceEnhancementsSettings settings;
     public override string SettingsCategory() => "Axen's Performance Enhancements";
     public override void DoSettingsWindowContents(Rect inRect) => settings.Draw(inRect);
     public const string PackageId = "axeno7.performanceplus";
@@ -15,9 +15,9 @@ public sealed class PerformancePlusMod : Mod
     public static bool InitializationComplete;
     public static object AlgorithmParameters() => new { pathInitialNodes = Pathfinding.PathOutputMemory.InitialNodes };
 
-    public PerformancePlusMod(ModContentPack content) : base(content)
+    public AxensPerformanceEnhancementsMod(ModContentPack content) : base(content)
     {
-        settings = GetSettings<PerformancePlusSettings>();
+        settings = GetSettings<AxensPerformanceEnhancementsSettings>();
         Apply("path-memory", Pathfinding.PathOutputMemory.Apply);
         Apply("sparse-gas", Simulation.SparseGas.Apply);
         Apply("world-dispatch", World.WorldTickDispatch.Apply);

@@ -6,7 +6,7 @@ using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using Verse;
 using Verse.Glow;
-namespace PerformancePlus.Experimental;
+namespace AxensPerformanceEnhancements.Experimental;
 
 internal static class GlowBuffers
 {

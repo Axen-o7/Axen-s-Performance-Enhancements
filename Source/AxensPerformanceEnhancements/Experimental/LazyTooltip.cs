@@ -4,7 +4,7 @@ using RimWorld;
 using Verse;
 using UnityEngine;
 using static RimWorld.MechanitorBandwidthGizmo;
-namespace PerformancePlus.Experimental;
+namespace AxensPerformanceEnhancements.Experimental;
 
 internal static class LazyTooltip
 {

@@ -4,7 +4,7 @@ using HarmonyLib;
 using RimWorld.Planet;
 using Verse;
 
-namespace PerformancePlus.World;
+namespace AxensPerformanceEnhancements.World;
 
 internal static class WorldTickDispatch
 {
@@ -38,7 +38,7 @@ internal static class WorldTickDispatch
                 AccessTools.Method(typeof(MapParent), nameof(MapParent.GetDirectlyHeldThings))
             }.All(method => Harmony.GetPatchInfo(method) is not { Owners.Count: > 0 });
             scheduledCompatible = LoadedModManager.RunningModsListForReading.All(m => m.IsOfficialMod ||
-                m.PackageId is "brrainz.harmony" or PerformancePlusMod.PackageId or "local.rwperformance.audit");
+                m.PackageId is "brrainz.harmony" or AxensPerformanceEnhancementsMod.PackageId or "local.rwperformance.audit");
         });
     }
 

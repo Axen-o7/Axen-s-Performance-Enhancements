@@ -1,7 +1,7 @@
 // room grouping.
 using HarmonyLib;
 using Verse;
-namespace PerformancePlus.Experimental;
+namespace AxensPerformanceEnhancements.Experimental;
 
 internal static class RoomGroups
 {

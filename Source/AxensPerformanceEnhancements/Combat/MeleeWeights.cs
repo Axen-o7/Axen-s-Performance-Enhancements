@@ -4,7 +4,7 @@ using HarmonyLib;
 using RimWorld;
 using Verse;
 
-namespace PerformancePlus.Combat;
+namespace AxensPerformanceEnhancements.Combat;
 
 internal static class MeleeWeights
 {

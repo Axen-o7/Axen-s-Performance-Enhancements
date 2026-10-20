@@ -3,7 +3,7 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using Verse;
 using Verse.AI;
-namespace PerformancePlus.Experimental;
+namespace AxensPerformanceEnhancements.Experimental;
 
 internal static class CombatLine
 {

@@ -5,7 +5,7 @@ using HarmonyLib;
 using Unity.Collections;
 using Verse;
 
-namespace PerformancePlus.Pathfinding;
+namespace AxensPerformanceEnhancements.Pathfinding;
 
 internal static class PathOutputMemory
 {

@@ -2,7 +2,7 @@
 using System.Reflection.Emit;
 using HarmonyLib;
 using Verse;
-namespace PerformancePlus.Experimental;
+namespace AxensPerformanceEnhancements.Experimental;
 
 internal static class CoverPass
 {

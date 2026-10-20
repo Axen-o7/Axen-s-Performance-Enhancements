@@ -3,7 +3,7 @@ using HarmonyLib;
 using RimWorld.Planet;
 using UnityEngine;
 using Verse;
-namespace PerformancePlus.Experimental;
+namespace AxensPerformanceEnhancements.Experimental;
 
 internal static class CloudZero
 {

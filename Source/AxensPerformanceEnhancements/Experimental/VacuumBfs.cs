@@ -3,7 +3,7 @@ using HarmonyLib;
 using Verse;
 using RimWorld;
 using static Verse.VacuumComponent;
-namespace PerformancePlus.Experimental;
+namespace AxensPerformanceEnhancements.Experimental;
 
 internal static class VacuumBfs
 {

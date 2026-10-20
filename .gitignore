@@ -3,12 +3,12 @@
 !/Source/
 
 /Source/*
-!/Source/PerformancePlus/
+!/Source/AxensPerformanceEnhancements/
 
-/Source/PerformancePlus/**
-!/Source/PerformancePlus/**/
-!/Source/PerformancePlus/**/*.cs
-!/Source/PerformancePlus/PerformancePlus.csproj
+/Source/AxensPerformanceEnhancements/**
+!/Source/AxensPerformanceEnhancements/**/
+!/Source/AxensPerformanceEnhancements/**/*.cs
+!/Source/AxensPerformanceEnhancements/AxensPerformanceEnhancements.csproj
 
 **/bin/
 **/obj/

@@ -3,7 +3,7 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using RimWorld;
 
-namespace PerformancePlus.Psychic;
+namespace AxensPerformanceEnhancements.Psychic;
 
 internal static class EntropyReuse
 {

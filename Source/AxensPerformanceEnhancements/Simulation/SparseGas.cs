@@ -5,7 +5,7 @@ using HarmonyLib;
 using UnityEngine;
 using Verse;
 
-namespace PerformancePlus.Simulation;
+namespace AxensPerformanceEnhancements.Simulation;
 
 internal static class SparseGas
 {

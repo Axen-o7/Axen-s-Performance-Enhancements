@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using HarmonyLib;
 using Waylith.Rendering;
-namespace PerformancePlus.Experimental;
+namespace AxensPerformanceEnhancements.Experimental;
 
 internal static class KeywordKey
 {
