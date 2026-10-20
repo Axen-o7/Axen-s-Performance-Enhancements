@@ -4,7 +4,7 @@
     <Version>1.1.0-beta</Version>
     <AssemblyTitle>Axen's Performance Enhancements</AssemblyTitle>
     <Product>Axen's Performance Enhancements</Product>
-    <OutputPath>../../PerformancePlus/Assemblies/</OutputPath>
+    <OutputPath>../../Axen's Performance Enhancements/Assemblies/</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
