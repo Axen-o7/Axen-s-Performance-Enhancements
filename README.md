@@ -26,4 +26,8 @@ Base TPS group is Core + DLCs.
 
 Benchmarking was done on a MacBook Air 15-Inch with the base Apple M5 chip and 16GB RAM running on MacOS Tahoe 26.5.1
 
+## Shower Thoughts
+
+Oct 20 @12:05AM It's late at night, but would it be worth it to try creating a flow field for groups of pawns in RimWorld? The obvious hurdles are that pathfinding targets are constantly updating, and I don't even know how you'd keep close to vanilla pathfinding results. If a raid had a flow field they would probably all just pool into a single door which is neither vanilla...actually, vanilla does kind of do that when you got a killbox. idk. I'm not even sure if it'd be possible, and I know the "hybrid" approach (like regional flow fields rather than each individual pawn) is always an option but I'm afraid I risk creating the whole system and then the overhead exceeds that of just normal vanilla pathfinding. I'll get some sleep first and then throw some more mental energy at it eventually.
+
 Check out my other mods on [Steam Workshop.](https://steamcommunity.com/profiles/76561199797667982/myworkshopfiles/?appid=294100)
