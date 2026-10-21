@@ -4,6 +4,10 @@ When I say AI did not create this mod, that does not mean I'm anti-AI or refuse 
 
 The options in the experimental section of mod settings are features I'm actively working on and testing, so they are not feature-complete and don't guarantee performance improvements.
 
+## Update - October 21 @11:48AM
+
+Sorry if development or updates seem slow, I like playing RimWorld as much as I like modding it.
+
 ## Update - October 20 @5:35PM
 
 Welp, my benchmarks might just be shit, at least in the way I'm testing. I did more than just 1-colonist testing and started doing early-game (3 colonists), mid-game (10 colonists), and late-game (25 colonists) scenarios. Unfortunately the control group (Core + DLCs) has too wild of results to act as a reliable comparison. For example, having only Harmony alongside the control group reduced average TPS by about 600 ticks across testing which doesn't seem right at all. I was doing an A/B approach where I enable only the first half of experimental options in the A group and second half in the B group, and originally, the results implied that B was causing more of a regression. However, I feel inclined to try and improve consistency across the whole benchmarking process before I deduct anything from those resuls. My laptop is plugged in, all other apps are closed other than RimWorld of course, and I avoid using the computer during any test runs. I think this points to an actual variation in the game runtime, but I still need to check.
