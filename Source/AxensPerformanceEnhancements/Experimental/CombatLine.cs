@@ -7,7 +7,35 @@ namespace AxensPerformanceEnhancements.Experimental;
 
 internal static class CombatLine
 {
-    internal static void Apply(Harmony h) => h.Patch(AccessTools.Method(typeof(AttackTargetFinder), "FriendlyFireConeTargetScoreOffset"), transpiler: new HarmonyMethod(typeof(CombatLine), nameof(Transpile)));
+    internal static bool Requested { get; private set; }
+    internal static bool CompatibilityBlocked { get; private set; }
+
+    internal static void Apply(Harmony h)
+    {
+        Requested = true;
+        var target = AccessTools.Method(typeof(AttackTargetFinder), "FriendlyFireConeTargetScoreOffset");
+        if (CheckCompatibility(h, target))
+            h.Patch(target, transpiler: new HarmonyMethod(typeof(CombatLine), nameof(Transpile)));
+        // Catch mods loaded after us, before gameplay starts.
+        LongEventHandler.ExecuteWhenFinished(() =>
+        {
+            if (CompatibilityBlocked || !CheckCompatibility(h, target))
+                AxensPerformanceEnhancementsMod.AppliedFeatures.Remove("combat-line");
+        });
+    }
+
+    private static bool CheckCompatibility(Harmony h, System.Reflection.MethodBase target)
+    {
+        var owners = new[] { target, AccessTools.Method(typeof(ShotReport), nameof(ShotReport.HitReportFor)) }
+            .SelectMany(method => Harmony.GetPatchInfo(method)?.Owners.Where(owner => owner != h.Id) ?? [])
+            .Distinct().ToArray();
+        if (owners.Length == 0) return true;
+        h.UnpatchAll(h.Id);
+        CompatibilityBlocked = true;
+        Log.Warning($"[Axen's Performance Enhancements] Combat line disabled: conflicting patches from {string.Join(", ", owners)}.");
+        return false;
+    }
+
     private static IEnumerable<CodeInstruction> Transpile(IEnumerable<CodeInstruction> instructions)
     {
         int replaced = 0;
