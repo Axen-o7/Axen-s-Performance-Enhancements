@@ -1,0 +1,1 @@
+These files are features that either don't work, don't produce any meaningful benefits, or come with too big of tradeoffs. They'll be kept in case because I spent time on them and don't wanna just throw all the code out. If anyone wants to work on these, by all means go ahead.

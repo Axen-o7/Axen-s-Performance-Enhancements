@@ -25,16 +25,9 @@ public sealed class AxensPerformanceEnhancementsMod : Mod
         Apply("melee-weights", Combat.MeleeWeights.Apply);
         Apply("entropy-local", Psychic.EntropyReuse.Apply);
         Apply("combat-line", Experimental.CombatLine.Apply);
-        Apply("glow-buffers", Experimental.GlowBuffers.Apply);
-        Apply("cloud-zero", Experimental.CloudZero.Apply);
         Apply("camera-registry", Experimental.CameraRegistry.Apply);
         Apply("keyword-key", Experimental.KeywordKey.Apply);
-        Apply("cover-pass", Experimental.CoverPass.Apply);
-        Apply("path-dag", Experimental.PathDag.Apply);
-        Apply("vacuum-bfs", Experimental.VacuumBfs.Apply);
-        Apply("room-groups", Experimental.RoomGroups.Apply);
         Apply("slaughter-cursors", Experimental.SlaughterCursors.Apply);
-        Apply("lazy-tooltip", Experimental.LazyTooltip.Apply);
         InitializationComplete = true;
         Log.Message($"[Axen's Performance Enhancements] Enabled: {string.Join(", ", AppliedFeatures)}");
 

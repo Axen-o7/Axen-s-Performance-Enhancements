@@ -1,4 +1,5 @@
 // single-pass cover calculation.
+// Deprecated: individual benchmarks did not establish a consistent performance benefit.
 using System.Reflection.Emit;
 using HarmonyLib;
 using Verse;

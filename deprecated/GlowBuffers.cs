@@ -1,4 +1,5 @@
 // lighting buffer reuse.
+// Deprecated: playtesting showed lighting stopped updating; retained for a future fix.
 using System.Runtime.CompilerServices;
 using HarmonyLib;
 using Unity.Collections;

@@ -1,5 +1,10 @@
 /*
 !/.gitignore
+!/deprecated/
+
+/deprecated/*
+!/deprecated/*.cs
+!/deprecated/README.md
 !/Source/
 
 /Source/*

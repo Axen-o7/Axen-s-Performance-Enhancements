@@ -1,4 +1,5 @@
 // room grouping.
+// Deprecated: individual benchmarks did not establish a consistent performance benefit.
 using HarmonyLib;
 using Verse;
 namespace AxensPerformanceEnhancements.Experimental;

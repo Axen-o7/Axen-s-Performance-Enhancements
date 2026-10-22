@@ -1,4 +1,5 @@
 // lazy mechanitor bandwidth tooltip.
+// Deprecated: benchmarks did not establish a consistent benefit; mechanitor UI coverage remains unverified.
 using HarmonyLib;
 using RimWorld;
 using Verse;

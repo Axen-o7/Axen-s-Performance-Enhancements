@@ -13,16 +13,9 @@ public sealed class AxensPerformanceEnhancementsSettings : ModSettings
     public bool MeleeWeights = true;
     public bool EntropyLocal = true;
     public bool CombatLine;
-    public bool GlowBuffers;
-    public bool CloudZero;
     public bool CameraRegistry;
     public bool KeywordKey;
-    public bool CoverPass;
-    public bool PathDag;
-    public bool VacuumBfs;
-    public bool RoomGroups;
     public bool SlaughterCursors;
-    public bool LazyTooltip;
 
     private Vector2 scrollPosition;
     private float contentHeight;
@@ -36,32 +29,18 @@ public sealed class AxensPerformanceEnhancementsSettings : ModSettings
         Scribe_Values.Look(ref MeleeWeights, "meleeWeights", true);
         Scribe_Values.Look(ref EntropyLocal, "entropyLocal", true);
         Scribe_Values.Look(ref CombatLine, "combatLine", false);
-        Scribe_Values.Look(ref GlowBuffers, "glowBuffers", false);
-        Scribe_Values.Look(ref CloudZero, "cloudZero", false);
         Scribe_Values.Look(ref CameraRegistry, "cameraRegistry", false);
         Scribe_Values.Look(ref KeywordKey, "keywordKey", false);
-        Scribe_Values.Look(ref CoverPass, "coverPass", false);
-        Scribe_Values.Look(ref PathDag, "pathDag", false);
-        Scribe_Values.Look(ref VacuumBfs, "vacuumBfs", false);
-        Scribe_Values.Look(ref RoomGroups, "roomGroups", false);
         Scribe_Values.Look(ref SlaughterCursors, "slaughterCursors", false);
-        Scribe_Values.Look(ref LazyTooltip, "lazyTooltip", false);
     }
 
     internal bool Enabled(string feature) => feature switch {
         "path-memory" => PathMemory, "sparse-gas" => SparseGas, "world-dispatch" => WorldDispatch,
         "reservation-index" => ReservationIndex, "melee-weights" => MeleeWeights, "entropy-local" => EntropyLocal,
         "combat-line" => CombatLine,
-        "glow-buffers" => GlowBuffers,
-        "cloud-zero" => CloudZero,
         "camera-registry" => CameraRegistry,
         "keyword-key" => KeywordKey,
-        "cover-pass" => CoverPass,
-        "path-dag" => PathDag,
-        "vacuum-bfs" => VacuumBfs,
-        "room-groups" => RoomGroups,
         "slaughter-cursors" => SlaughterCursors,
-        "lazy-tooltip" => LazyTooltip,
         _ => throw new ArgumentException("Unknown optimization: " + feature)
     };
 
@@ -73,16 +52,9 @@ public sealed class AxensPerformanceEnhancementsSettings : ModSettings
         MeleeWeights != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("melee-weights") ||
         EntropyLocal != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("entropy-local") ||
         CombatLine != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("combat-line") ||
-        GlowBuffers != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("glow-buffers") ||
-        CloudZero != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("cloud-zero") ||
         CameraRegistry != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("camera-registry") ||
         KeywordKey != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("keyword-key") ||
-        CoverPass != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("cover-pass") ||
-        PathDag != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("path-dag") ||
-        VacuumBfs != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("vacuum-bfs") ||
-        RoomGroups != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("room-groups") ||
-        SlaughterCursors != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("slaughter-cursors") ||
-        LazyTooltip != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("lazy-tooltip");
+        SlaughterCursors != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("slaughter-cursors");
 
     internal void Draw(Rect area)
     {
@@ -101,26 +73,12 @@ public sealed class AxensPerformanceEnhancementsSettings : ModSettings
         Header("Experimental", "Off by default");
         Row("Combat line calculation", ref CombatLine,
             "Uses only the shooting line during friendly-fire scoring, avoiding a full shot report and its stat-cache refreshes.");
-        Row("Lighting buffer reuse", ref GlowBuffers,
-            "Sizes native lighting buffers to each light and reuses available pool slots.");
-        Row("Invisible cloud rendering", ref CloudZero,
-            "Skips cloud rendering only at exactly zero current and target opacity; keeps cloud fades.");
         Row("Camera lookup indexing", ref CameraRegistry,
             "Keeps a per-world camera index, invalidated when cameras are registered or destroyed. Other object searches use the original engine.");
         Row("Shader keyword reuse", ref KeywordKey,
             "Reuses combined material and global shader keyword keys until either changes.");
-        Row("Cover calculation reuse", ref CoverPass,
-            "Collects cover and calculates its blocking chance in one pass when creating a shot report.");
-        Row("Parallel path grids", ref PathDag,
-            "Allows independent path-grid jobs to overlap. Requests with customizers or lord grids use the original scheduling.");
-        Row("Vacuum room traversal", ref VacuumBfs,
-            "[Odyssey] Avoids repeated frontier searches while finding rooms exposed to vacuum.");
-        Row("Room grouping", ref RoomGroups,
-            "Groups new regions and districts once during room rebuilding instead of repeatedly scanning them.");
         Row("Slaughter selection cursors", ref SlaughterCursors,
             "Selects animals without repeatedly removing entries from the front of temporary lists. Keeps existing limits and selection order.");
-        Row("Lazy mechanitor tooltip", ref LazyTooltip,
-            "[Biotech] Builds the mechanitor bandwidth tooltip when it is requested instead of every draw.");
         listing.Gap(24f);
         Text.Font = GameFont.Tiny;
         var originalColor = GUI.color;

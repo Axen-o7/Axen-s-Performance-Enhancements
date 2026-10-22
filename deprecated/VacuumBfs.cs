@@ -1,4 +1,5 @@
 // vacuum room traversal.
+// Deprecated: no noticeable performance improvement.
 using HarmonyLib;
 using Verse;
 using RimWorld;
