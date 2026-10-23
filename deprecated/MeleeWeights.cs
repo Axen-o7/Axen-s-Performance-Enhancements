@@ -1,4 +1,5 @@
 // invocation-local melee weight reuse.
+// Deprecated: the current engine already reuses initial weights during melee selection.
 using System.Reflection.Emit;
 using HarmonyLib;
 using RimWorld;

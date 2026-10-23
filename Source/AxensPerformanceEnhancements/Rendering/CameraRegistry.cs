@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using HarmonyLib;
 using UnityEngine;
 using Waylith.UnityCompat;
-namespace AxensPerformanceEnhancements.Experimental;
+namespace AxensPerformanceEnhancements.Rendering;
 
 internal static class CameraRegistry
 {

@@ -1,4 +1,5 @@
 // shader keyword reuse.
+// Deprecated: has not shown consistent performance improvements in benchmarking.
 using System.Runtime.CompilerServices;
 using HarmonyLib;
 using Waylith.Rendering;

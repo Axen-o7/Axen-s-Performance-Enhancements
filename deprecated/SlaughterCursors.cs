@@ -1,4 +1,5 @@
 // slaughter selection cursors.
+// Deprecated: has not shown consistent performance improvements in benchmarking.
 using HarmonyLib;
 using Verse;
 using RimWorld;

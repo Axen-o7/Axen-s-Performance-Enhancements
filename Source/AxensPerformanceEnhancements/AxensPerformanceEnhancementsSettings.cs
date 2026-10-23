@@ -10,13 +10,13 @@ public sealed class AxensPerformanceEnhancementsSettings : ModSettings
     public bool SparseGas = true;
     public bool WorldDispatch = true;
     public bool ReservationIndex = true;
-    public bool MeleeWeights = true;
     public bool EntropyLocal = true;
-    public bool CombatLine;
-    public bool CameraRegistry;
-    public bool KeywordKey;
-    public bool SlaughterCursors;
+    public bool CombatLine = true;
+    public bool CameraRegistry = true;
+    public bool PathDag = true;
+    public bool RoomGroups = true;
 
+    private bool promotedDefaultsApplied = true;
     private Vector2 scrollPosition;
     private float contentHeight;
 
@@ -26,21 +26,26 @@ public sealed class AxensPerformanceEnhancementsSettings : ModSettings
         Scribe_Values.Look(ref SparseGas, "sparseGas", true);
         Scribe_Values.Look(ref WorldDispatch, "worldDispatch", true);
         Scribe_Values.Look(ref ReservationIndex, "reservationIndex", true);
-        Scribe_Values.Look(ref MeleeWeights, "meleeWeights", true);
         Scribe_Values.Look(ref EntropyLocal, "entropyLocal", true);
-        Scribe_Values.Look(ref CombatLine, "combatLine", false);
-        Scribe_Values.Look(ref CameraRegistry, "cameraRegistry", false);
-        Scribe_Values.Look(ref KeywordKey, "keywordKey", false);
-        Scribe_Values.Look(ref SlaughterCursors, "slaughterCursors", false);
+        Scribe_Values.Look(ref CombatLine, "combatLine", true);
+        Scribe_Values.Look(ref CameraRegistry, "cameraRegistry", true);
+        Scribe_Values.Look(ref PathDag, "pathDag", true);
+        Scribe_Values.Look(ref RoomGroups, "roomGroups", true);
+        Scribe_Values.Look(ref promotedDefaultsApplied, "promotedDefaultsApplied", false);
+        if (Scribe.mode == LoadSaveMode.PostLoadInit && !promotedDefaultsApplied)
+        {
+            CombatLine = CameraRegistry = PathDag = RoomGroups = true;
+            promotedDefaultsApplied = true;
+        }
     }
 
     internal bool Enabled(string feature) => feature switch {
         "path-memory" => PathMemory, "sparse-gas" => SparseGas, "world-dispatch" => WorldDispatch,
-        "reservation-index" => ReservationIndex, "melee-weights" => MeleeWeights, "entropy-local" => EntropyLocal,
+        "reservation-index" => ReservationIndex, "entropy-local" => EntropyLocal,
         "combat-line" => CombatLine,
         "camera-registry" => CameraRegistry,
-        "keyword-key" => KeywordKey,
-        "slaughter-cursors" => SlaughterCursors,
+        "path-dag" => PathDag,
+        "room-groups" => RoomGroups,
         _ => throw new ArgumentException("Unknown optimization: " + feature)
     };
 
@@ -49,12 +54,11 @@ public sealed class AxensPerformanceEnhancementsSettings : ModSettings
         SparseGas != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("sparse-gas") ||
         WorldDispatch != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("world-dispatch") ||
         ReservationIndex != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("reservation-index") ||
-        MeleeWeights != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("melee-weights") ||
         EntropyLocal != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("entropy-local") ||
-        CombatLine != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("combat-line") ||
+        CombatLine != Combat.CombatLine.Requested ||
         CameraRegistry != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("camera-registry") ||
-        KeywordKey != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("keyword-key") ||
-        SlaughterCursors != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("slaughter-cursors");
+        PathDag != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("path-dag") ||
+        RoomGroups != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("room-groups");
 
     internal void Draw(Rect area)
     {
@@ -67,23 +71,23 @@ public sealed class AxensPerformanceEnhancementsSettings : ModSettings
         Row("Sparse gas processing", ref SparseGas, "Reduces processing when gas occupies only a small part of a map.");
         Row("World dispatch", ref WorldDispatch, "Reduces world-object dispatch work while preserving scheduled callbacks.");
         Row("Reservation indexing", ref ReservationIndex, "Speeds up searches for existing reservations.");
-        Row("Melee weight reuse", ref MeleeWeights, "Reuses calculations within one melee selection refresh.");
         Row("Psychic entropy reuse", ref EntropyLocal, "[Royalty] Reuses calculations within one psychic heat evaluation.");
-        listing.Gap(24f);
-        Header("Experimental", "Off by default");
         Row("Combat line calculation", ref CombatLine,
             "Uses only the shooting line during friendly-fire scoring, avoiding a full shot report and its stat-cache refreshes.");
         Row("Camera lookup indexing", ref CameraRegistry,
             "Keeps a per-world camera index, invalidated when cameras are registered or destroyed. Other object searches use the original engine.");
-        Row("Shader keyword reuse", ref KeywordKey,
-            "Reuses combined material and global shader keyword keys until either changes.");
-        Row("Slaughter selection cursors", ref SlaughterCursors,
-            "Selects animals without repeatedly removing entries from the front of temporary lists. Keeps existing limits and selection order.");
+        Row("Parallel path grids", ref PathDag,
+            "Schedules independent path grids in parallel. Requests with custom grids or lord-specific behavior use the original scheduling.");
+        Row("Room grouping", ref RoomGroups,
+            "Groups regions and districts in one pass when rebuilding rooms.");
+        listing.Gap(24f);
+        Header("Experimental", "Off by default");
+        listing.Label("Nothing to see here, everything’s stable.");
         listing.Gap(24f);
         Text.Font = GameFont.Tiny;
         var originalColor = GUI.color;
         GUI.color = Color.gray;
-        listing.Label("NOTICE: This mod is a WIP made for the constantly updating 1.7, so any one of these optimizations could become obsolete at any point.");
+        listing.Label("NOTICE: RimWorld 1.7 changes frequently, so game updates may make individual optimizations obsolete.");
         GUI.color = originalColor;
         Text.Font = GameFont.Small;
         if (RestartRequired)

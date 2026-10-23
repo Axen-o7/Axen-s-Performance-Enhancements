@@ -22,12 +22,11 @@ public sealed class AxensPerformanceEnhancementsMod : Mod
         Apply("sparse-gas", Simulation.SparseGas.Apply);
         Apply("world-dispatch", World.WorldTickDispatch.Apply);
         Apply("reservation-index", AI.ReservationQueries.Apply);
-        Apply("melee-weights", Combat.MeleeWeights.Apply);
         Apply("entropy-local", Psychic.EntropyReuse.Apply);
-        Apply("combat-line", Experimental.CombatLine.Apply);
-        Apply("camera-registry", Experimental.CameraRegistry.Apply);
-        Apply("keyword-key", Experimental.KeywordKey.Apply);
-        Apply("slaughter-cursors", Experimental.SlaughterCursors.Apply);
+        Apply("combat-line", Combat.CombatLine.Apply);
+        Apply("camera-registry", Rendering.CameraRegistry.Apply);
+        Apply("path-dag", Pathfinding.PathDag.Apply);
+        Apply("room-groups", Regions.RoomGroups.Apply);
         InitializationComplete = true;
         Log.Message($"[Axen's Performance Enhancements] Enabled: {string.Join(", ", AppliedFeatures)}");
 
@@ -45,7 +44,8 @@ public sealed class AxensPerformanceEnhancementsMod : Mod
                 AppliedFeatures.Clear();
                 throw;
             }
-            AppliedFeatures.Add(name);
+            if (name != "combat-line" || !Combat.CombatLine.CompatibilityBlocked)
+                AppliedFeatures.Add(name);
         }
     }
 }
