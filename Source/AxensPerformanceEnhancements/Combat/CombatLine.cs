@@ -14,8 +14,8 @@ internal static class CombatLine
         var target = AccessTools.Method(typeof(AttackTargetFinder), "FriendlyFireConeTargetScoreOffset");
         if (CheckCompatibility(h, target))
             h.Patch(target, transpiler: new HarmonyMethod(typeof(CombatLine), nameof(Transpile)));
-        // Catch mods loaded after us, before gameplay starts.
-        LongEventHandler.ExecuteWhenFinished(() =>
+        // Catch mods that patch later, including from static constructors.
+        StartupChecks.AfterAllPatches.Add(() =>
         {
             if (CompatibilityBlocked || !CheckCompatibility(h, target))
                 AxensPerformanceEnhancementsMod.AppliedFeatures.Remove("combat-line");

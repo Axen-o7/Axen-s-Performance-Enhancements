@@ -28,7 +28,7 @@ internal static class WorldTickDispatch
             postfix: new HarmonyMethod(typeof(WorldTickDispatch), nameof(ComponentsChanged)));
         harmony.Patch(AccessTools.Method(typeof(WorldObjectsHolder), nameof(WorldObjectsHolder.ExposeData)),
             prefix: new HarmonyMethod(typeof(WorldTickDispatch), nameof(BeforeExpose)));
-        LongEventHandler.ExecuteWhenFinished(() =>
+        StartupChecks.AfterAllPatches.Add(() =>
         {
             compatible = new[] {
                 AccessTools.Method(typeof(WorldObject), nameof(WorldObject.DoTick)),
