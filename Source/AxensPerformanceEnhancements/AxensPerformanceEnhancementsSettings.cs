@@ -50,15 +50,15 @@ public sealed class AxensPerformanceEnhancementsSettings : ModSettings
     };
 
     internal bool RestartRequired =>
-        PathMemory != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("path-memory") ||
-        SparseGas != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("sparse-gas") ||
-        WorldDispatch != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("world-dispatch") ||
-        ReservationIndex != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("reservation-index") ||
-        EntropyLocal != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("entropy-local") ||
-        CombatLine != Combat.CombatLine.Requested ||
-        CameraRegistry != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("camera-registry") ||
-        PathDag != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("path-dag") ||
-        RoomGroups != AxensPerformanceEnhancementsMod.AppliedFeatures.Contains("room-groups");
+        PathMemory != AxensPerformanceEnhancementsMod.RequestedFeatures.Contains("path-memory") ||
+        SparseGas != AxensPerformanceEnhancementsMod.RequestedFeatures.Contains("sparse-gas") ||
+        WorldDispatch != AxensPerformanceEnhancementsMod.RequestedFeatures.Contains("world-dispatch") ||
+        ReservationIndex != AxensPerformanceEnhancementsMod.RequestedFeatures.Contains("reservation-index") ||
+        EntropyLocal != AxensPerformanceEnhancementsMod.RequestedFeatures.Contains("entropy-local") ||
+        CombatLine != AxensPerformanceEnhancementsMod.RequestedFeatures.Contains("combat-line") ||
+        CameraRegistry != AxensPerformanceEnhancementsMod.RequestedFeatures.Contains("camera-registry") ||
+        PathDag != AxensPerformanceEnhancementsMod.RequestedFeatures.Contains("path-dag") ||
+        RoomGroups != AxensPerformanceEnhancementsMod.RequestedFeatures.Contains("room-groups");
 
     internal void Draw(Rect area)
     {

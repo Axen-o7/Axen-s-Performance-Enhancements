@@ -7,17 +7,15 @@ namespace AxensPerformanceEnhancements.Combat;
 
 internal static class CombatLine
 {
-    internal static bool Requested { get; private set; }
     internal static bool CompatibilityBlocked { get; private set; }
 
     internal static void Apply(Harmony h)
     {
-        Requested = true;
         var target = AccessTools.Method(typeof(AttackTargetFinder), "FriendlyFireConeTargetScoreOffset");
         if (CheckCompatibility(h, target))
             h.Patch(target, transpiler: new HarmonyMethod(typeof(CombatLine), nameof(Transpile)));
-        // Catch mods loaded after us, before gameplay starts.
-        LongEventHandler.ExecuteWhenFinished(() =>
+        // Catch mods that patch later, including from static constructors.
+        StartupChecks.AfterAllPatches.Add(() =>
         {
             if (CompatibilityBlocked || !CheckCompatibility(h, target))
                 AxensPerformanceEnhancementsMod.AppliedFeatures.Remove("combat-line");

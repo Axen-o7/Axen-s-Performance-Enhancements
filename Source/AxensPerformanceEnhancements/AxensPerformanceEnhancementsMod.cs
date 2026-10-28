@@ -12,8 +12,8 @@ public sealed class AxensPerformanceEnhancementsMod : Mod
     public override void DoSettingsWindowContents(Rect inRect) => settings.Draw(inRect);
     public const string PackageId = "axeno7.performanceplus";
     public static readonly List<string> AppliedFeatures = [];
-    public static bool InitializationComplete;
-    public static object AlgorithmParameters() => new { pathInitialNodes = Pathfinding.PathOutputMemory.InitialNodes };
+    // Features enabled at startup, whether or not they could be applied.
+    internal static readonly List<string> RequestedFeatures = [];
 
     public AxensPerformanceEnhancementsMod(ModContentPack content) : base(content)
     {
@@ -27,22 +27,20 @@ public sealed class AxensPerformanceEnhancementsMod : Mod
         Apply("camera-registry", Rendering.CameraRegistry.Apply);
         Apply("path-dag", Pathfinding.PathDag.Apply);
         Apply("room-groups", Regions.RoomGroups.Apply);
-        InitializationComplete = true;
         Log.Message($"[Axen's Performance Enhancements] Enabled: {string.Join(", ", AppliedFeatures)}");
 
         void Apply(string name, Action<Harmony> patch)
         {
             if (!settings.Enabled(name)) return;
-            try { patch(new Harmony(PackageId + "." + name)); }
-            catch
+            RequestedFeatures.Add(name);
+            var id = PackageId + "." + name;
+            try { patch(new Harmony(id)); }
+            catch (Exception ex)
             {
-                foreach (var feature in AppliedFeatures.Append(name))
-                {
-                    var id = PackageId + "." + feature;
-                    new Harmony(id).UnpatchAll(id);
-                }
-                AppliedFeatures.Clear();
-                throw;
+                // Isolate the failure so other features and the settings page stay available.
+                new Harmony(id).UnpatchAll(id);
+                Log.Error($"[Axen's Performance Enhancements] {name} disabled: failed to apply. {ex}");
+                return;
             }
             if (name != "combat-line" || !Combat.CombatLine.CompatibilityBlocked)
                 AppliedFeatures.Add(name);
