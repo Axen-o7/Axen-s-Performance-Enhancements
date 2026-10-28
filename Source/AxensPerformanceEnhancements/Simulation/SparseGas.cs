@@ -25,7 +25,10 @@ internal static class SparseGas
     {
         harmony.Patch(AccessTools.Method(typeof(GasGrid), nameof(GasGrid.Tick)), prefix: new HarmonyMethod(typeof(SparseGas), nameof(Tick)),
             finalizer: new HarmonyMethod(typeof(SparseGas), nameof(TickFinished)));
-        foreach (var method in AccessTools.GetDeclaredMethods(typeof(GasGrid)).Where(m => m.Name == "SetDirect" && m.GetParameters()[0].ParameterType == typeof(int)))
+        var setters = AccessTools.GetDeclaredMethods(typeof(GasGrid)).Where(m => m.Name == "SetDirect" && m.GetParameters()[0].ParameterType == typeof(int)).ToList();
+        // A missed setter would leave the active-cell index stale.
+        if (setters.Count != 2) throw new InvalidOperationException($"Expected two indexed gas setters, found {setters.Count}.");
+        foreach (var method in setters)
             harmony.Patch(method, postfix: new HarmonyMethod(typeof(SparseGas), nameof(IndexChanged)));
         harmony.Patch(AccessTools.Method(typeof(GasGrid), nameof(GasGrid.ClearCellUnsafe)), postfix: new HarmonyMethod(typeof(SparseGas), nameof(CellCleared)));
         harmony.Patch(AccessTools.Method(typeof(GasGrid), nameof(GasGrid.Notify_ThingSpawned)), postfix: new HarmonyMethod(typeof(SparseGas), nameof(ThingSpawned)));
