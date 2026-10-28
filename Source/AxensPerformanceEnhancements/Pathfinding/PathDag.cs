@@ -6,7 +6,12 @@ namespace AxensPerformanceEnhancements.Pathfinding;
 
 internal static class PathDag
 {
-    internal static void Apply(Harmony h) => h.Patch(AccessTools.Method(typeof(PathFinder), "ScheduleGridJobs"), prefix: new HarmonyMethod(typeof(PathDag), nameof(Before)));
+    internal static void Apply(Harmony h)
+    {
+        var target = AccessTools.Method(typeof(PathFinder), "ScheduleGridJobs");
+        h.Patch(target, prefix: new HarmonyMethod(typeof(PathDag), nameof(Before)));
+        StartupChecks.GuardReplacement(h, "path-dag", target);
+    }
     private static bool Before(PathFinder __instance, ref JobHandle __result)
     {
         if (__instance.tmpCurrentWork.Any(static request => request.customizer != null || request.RequesterLord != null)) return true;

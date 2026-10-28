@@ -23,7 +23,8 @@ internal static class SparseGas
 
     internal static void Apply(Harmony harmony)
     {
-        harmony.Patch(AccessTools.Method(typeof(GasGrid), nameof(GasGrid.Tick)), prefix: new HarmonyMethod(typeof(SparseGas), nameof(Tick)),
+        var tick = AccessTools.Method(typeof(GasGrid), nameof(GasGrid.Tick));
+        harmony.Patch(tick, prefix: new HarmonyMethod(typeof(SparseGas), nameof(Tick)),
             finalizer: new HarmonyMethod(typeof(SparseGas), nameof(TickFinished)));
         var setters = AccessTools.GetDeclaredMethods(typeof(GasGrid)).Where(m => m.Name == "SetDirect" && m.GetParameters()[0].ParameterType == typeof(int)).ToList();
         // A missed setter would leave the active-cell index stale.
@@ -34,6 +35,7 @@ internal static class SparseGas
         harmony.Patch(AccessTools.Method(typeof(GasGrid), nameof(GasGrid.Notify_ThingSpawned)), postfix: new HarmonyMethod(typeof(SparseGas), nameof(ThingSpawned)));
         harmony.Patch(AccessTools.Method(typeof(GasGrid), nameof(GasGrid.Debug_ClearAll)), postfix: new HarmonyMethod(typeof(SparseGas), nameof(Cleared)));
         harmony.Patch(AccessTools.Method(typeof(GasGrid), nameof(GasGrid.ExposeData)), postfix: new HarmonyMethod(typeof(SparseGas), nameof(Exposed)));
+        StartupChecks.GuardReplacement(harmony, "sparse-gas", tick);
     }
 
     private static bool Tick(GasGrid __instance)

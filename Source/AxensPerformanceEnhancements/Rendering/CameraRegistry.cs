@@ -13,7 +13,9 @@ internal static class CameraRegistry
     {
         h.Patch(AccessTools.Method(typeof(UnityWorld), "RegisterComponent"), postfix: new HarmonyMethod(typeof(CameraRegistry), nameof(Registered)));
         h.Patch(AccessTools.Method(typeof(UnityWorld), "DestroyNow", [typeof(UnityWorld.UnityComponentState)]), postfix: new HarmonyMethod(typeof(CameraRegistry), nameof(Destroyed)));
-        h.Patch(AccessTools.Method(typeof(UnityWorld), nameof(UnityWorld.FindObjectsByType)), prefix: new HarmonyMethod(typeof(CameraRegistry), nameof(Find)));
+        var find = AccessTools.Method(typeof(UnityWorld), nameof(UnityWorld.FindObjectsByType));
+        h.Patch(find, prefix: new HarmonyMethod(typeof(CameraRegistry), nameof(Find)));
+        StartupChecks.GuardReplacement(h, "camera-registry", find);
     }
     private static void Registered(UnityWorld __instance, UnityWorld.UnityComponentState componentState)
     { if (componentState.Instance is Camera) Worlds.GetValue(__instance, static _ => new State()).Cameras = null; }

@@ -7,8 +7,11 @@ internal static class RoomGroups
 {
     internal static void Apply(Harmony h)
     {
-        h.Patch(AccessTools.Method(typeof(RegionAndRoomUpdater), "CreateOrAttachToExistingDistricts"), prefix: new HarmonyMethod(typeof(RoomGroups), nameof(CreateOrAttachToExistingDistricts)));
-        h.Patch(AccessTools.Method(typeof(RegionAndRoomUpdater), "CreateOrAttachToExistingRooms"), prefix: new HarmonyMethod(typeof(RoomGroups), nameof(CreateOrAttachToExistingRooms)));
+        var districts = AccessTools.Method(typeof(RegionAndRoomUpdater), "CreateOrAttachToExistingDistricts");
+        var rooms = AccessTools.Method(typeof(RegionAndRoomUpdater), "CreateOrAttachToExistingRooms");
+        h.Patch(districts, prefix: new HarmonyMethod(typeof(RoomGroups), nameof(CreateOrAttachToExistingDistricts)));
+        h.Patch(rooms, prefix: new HarmonyMethod(typeof(RoomGroups), nameof(CreateOrAttachToExistingRooms)));
+        StartupChecks.GuardReplacement(h, "room-groups", districts, rooms);
     }
     private static bool CreateOrAttachToExistingDistricts(RegionAndRoomUpdater __instance, int numRegionGroups)
     {
