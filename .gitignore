@@ -1,5 +1,11 @@
 /*
 !/.gitignore
+!/Axen's Performance Enhancements/
+
+/Axen's Performance Enhancements/*
+!/Axen's Performance Enhancements/About/
+/Axen's Performance Enhancements/About/*
+!/Axen's Performance Enhancements/About/About.xml
 !/deprecated/
 
 /deprecated/*
