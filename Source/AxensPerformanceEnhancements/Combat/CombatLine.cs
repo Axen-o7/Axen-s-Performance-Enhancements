@@ -7,12 +7,10 @@ namespace AxensPerformanceEnhancements.Combat;
 
 internal static class CombatLine
 {
-    internal static bool Requested { get; private set; }
     internal static bool CompatibilityBlocked { get; private set; }
 
     internal static void Apply(Harmony h)
     {
-        Requested = true;
         var target = AccessTools.Method(typeof(AttackTargetFinder), "FriendlyFireConeTargetScoreOffset");
         if (CheckCompatibility(h, target))
             h.Patch(target, transpiler: new HarmonyMethod(typeof(CombatLine), nameof(Transpile)));
