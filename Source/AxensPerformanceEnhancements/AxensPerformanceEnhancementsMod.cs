@@ -14,8 +14,6 @@ public sealed class AxensPerformanceEnhancementsMod : Mod
     public static readonly List<string> AppliedFeatures = [];
     // Features enabled at startup, whether or not they could be applied.
     internal static readonly List<string> RequestedFeatures = [];
-    public static bool InitializationComplete;
-    public static object AlgorithmParameters() => new { pathInitialNodes = Pathfinding.PathOutputMemory.InitialNodes };
 
     public AxensPerformanceEnhancementsMod(ModContentPack content) : base(content)
     {
@@ -29,7 +27,6 @@ public sealed class AxensPerformanceEnhancementsMod : Mod
         Apply("camera-registry", Rendering.CameraRegistry.Apply);
         Apply("path-dag", Pathfinding.PathDag.Apply);
         Apply("room-groups", Regions.RoomGroups.Apply);
-        InitializationComplete = true;
         Log.Message($"[Axen's Performance Enhancements] Enabled: {string.Join(", ", AppliedFeatures)}");
 
         void Apply(string name, Action<Harmony> patch)
