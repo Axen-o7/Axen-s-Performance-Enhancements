@@ -47,9 +47,15 @@ internal static class ReservationQueries
         }
         return index.Targets.GetValueOrDefault(target, Empty);
     }
-    private static IEnumerable<CodeInstruction> IndexAlready(IEnumerable<CodeInstruction> input) => RewriteLists(input);
-    private static IEnumerable<CodeInstruction> RewriteLists(IEnumerable<CodeInstruction> input)
+    // Loop conditions and indexers reload the list, so resolve it once per invocation.
+    private static List<ReservationManager.Reservation> ForTargetOnce(ReservationManager manager, LocalTargetInfo target,
+        ref List<ReservationManager.Reservation>? cache) => cache ??= ForTarget(manager, target);
+    private static IEnumerable<CodeInstruction> IndexAlready(IEnumerable<CodeInstruction> input, ILGenerator generator) => RewriteLists(input, generator);
+    private static IEnumerable<CodeInstruction> RewriteLists(IEnumerable<CodeInstruction> input, ILGenerator generator)
     {
+        var cache = generator.DeclareLocal(typeof(List<ReservationManager.Reservation>));
+        yield return new CodeInstruction(OpCodes.Ldnull);
+        yield return new CodeInstruction(OpCodes.Stloc, cache);
         var hits = 0;
         foreach (var instruction in input)
         {
@@ -57,13 +63,14 @@ internal static class ReservationQueries
             {
                 hits++;
                 yield return new CodeInstruction(OpCodes.Ldarg_2).MoveLabelsFrom(instruction).MoveBlocksFrom(instruction);
-                yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ReservationQueries), nameof(ForTarget)));
+                yield return new CodeInstruction(OpCodes.Ldloca, cache);
+                yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ReservationQueries), nameof(ForTargetOnce)));
             }
             else yield return instruction;
         }
         if (hits != 2) throw new InvalidOperationException("Reservation list target pattern changed.");
     }
-    private static IEnumerable<CodeInstruction> Rewrite(IEnumerable<CodeInstruction> input)
+    private static IEnumerable<CodeInstruction> Rewrite(IEnumerable<CodeInstruction> input, ILGenerator generator)
     {
         var code = input.Select(i => new CodeInstruction(i)).ToList();
         var hits = 0;
@@ -76,6 +83,6 @@ internal static class ReservationQueries
                 break;
             }
         if (hits != 2) throw new InvalidOperationException("Expected two already-reserved calls.");
-        return RewriteLists(code);
+        return RewriteLists(code, generator);
     }
 }

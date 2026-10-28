@@ -1,4 +1,5 @@
 // room grouping.
+using System.Buffers;
 using HarmonyLib;
 using Verse;
 namespace AxensPerformanceEnhancements.Regions;
@@ -13,16 +14,42 @@ internal static class RoomGroups
         h.Patch(rooms, prefix: new HarmonyMethod(typeof(RoomGroups), nameof(CreateOrAttachToExistingRooms)));
         StartupChecks.GuardReplacement(h, "room-groups", districts, rooms);
     }
+    // Orders items by group, keeping source order within each group; group g spans starts[g]..starts[g + 1].
+    private static T[] GroupInOrder<T>(IEnumerable<T> items, int count, int groupCount, Func<T, int> groupOf, out int[] starts)
+    {
+        starts = ArrayPool<int>.Shared.Rent(groupCount + 1);
+        Array.Clear(starts, 0, groupCount + 1);
+        foreach (var item in items) starts[groupOf(item) + 1]++;
+        for (int group = 0; group < groupCount; group++) starts[group + 1] += starts[group];
+        var ordered = ArrayPool<T>.Shared.Rent(count);
+        var next = ArrayPool<int>.Shared.Rent(groupCount);
+        Array.Copy(starts, next, groupCount);
+        foreach (var item in items) ordered[next[groupOf(item)]++] = item;
+        ArrayPool<int>.Shared.Return(next);
+        return ordered;
+    }
+
+    private static void Release<T>(T[] ordered, int[] starts)
+    {
+        ArrayPool<T>.Shared.Return(ordered, clearArray: true);
+        ArrayPool<int>.Shared.Return(starts);
+    }
+
     private static bool CreateOrAttachToExistingDistricts(RegionAndRoomUpdater __instance, int numRegionGroups)
     {
-        var groups = new List<Region>[numRegionGroups];
-        for (int group = 0; group < groups.Length; group++) groups[group] = [];
-        foreach (var item in __instance.newRegions) groups[item.newRegionGroupIndex].Add(item);
+        var ordered = GroupInOrder(__instance.newRegions, __instance.newRegions.Count, numRegionGroups,
+            static region => region.newRegionGroupIndex, out var starts);
+        try { AttachDistricts(__instance, numRegionGroups, ordered, starts); }
+        finally { Release(ordered, starts); }
+        return false;
+    }
 
+    private static void AttachDistricts(RegionAndRoomUpdater __instance, int numRegionGroups, Region[] ordered, int[] starts)
+    {
         for (int i = 0; i < numRegionGroups; i++)
         {
             __instance.currentRegionGroup.Clear();
-            __instance.currentRegionGroup.AddRange(groups[i]);
+            for (int k = starts[i]; k < starts[i + 1]; k++) __instance.currentRegionGroup.Add(ordered[k]);
 
             if (!__instance.currentRegionGroup[0].type.AllowsMultipleRegionsPerDistrict())
             {
@@ -55,19 +82,25 @@ internal static class RoomGroups
                 __instance.reusedOldDistricts.Add(district2);
             }
         }
-        return false;
     }
+
     private static bool CreateOrAttachToExistingRooms(RegionAndRoomUpdater __instance, int numRooms)
     {
-        var groups = new List<District>[numRooms];
-        for (int group = 0; group < groups.Length; group++) groups[group] = [];
-        foreach (var district in __instance.reusedOldDistricts) groups[district.newOrReusedRoomIndex].Add(district);
-        foreach (var item in __instance.newDistricts) groups[item.newOrReusedRoomIndex].Add(item);
+        // Reused districts precede new ones, matching the original group order.
+        var ordered = GroupInOrder(__instance.reusedOldDistricts.Concat(__instance.newDistricts),
+            __instance.reusedOldDistricts.Count + __instance.newDistricts.Count, numRooms,
+            static district => district.newOrReusedRoomIndex, out var starts);
+        try { AttachRooms(__instance, numRooms, ordered, starts); }
+        finally { Release(ordered, starts); }
+        return false;
+    }
 
+    private static void AttachRooms(RegionAndRoomUpdater __instance, int numRooms, District[] ordered, int[] starts)
+    {
         for (int i = 0; i < numRooms; i++)
         {
             __instance.currentDistrictGroup.Clear();
-            __instance.currentDistrictGroup.AddRange(groups[i]);
+            for (int k = starts[i]; k < starts[i + 1]; k++) __instance.currentDistrictGroup.Add(ordered[k]);
 
             Room room = __instance.FindCurrentRoomNeighborWithMostRegions(out var multipleOldNeighborRooms);
             if (room == null)
@@ -91,6 +124,5 @@ internal static class RoomGroups
                 __instance.reusedOldRooms.Add(room);
             }
         }
-        return false;
     }
 }
